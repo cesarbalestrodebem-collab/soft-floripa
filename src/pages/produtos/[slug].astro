@@ -17,21 +17,18 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 const produto = await getProduto(slug!)
 const config = await getConfiguracoes()
-const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Tenho interesse no ${produto?.nome || 'purificador Everest'}. Pode me ajudar?`
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Ola! Tenho interesse no ${produto?.nome || 'purificador Everest'}. Pode me ajudar?`
 
 if (!produto) {
   return Astro.redirect('/produtos')
 }
 ---
 
-<Layout
-  title={produto.nome}
-  description={produto.descricao}
->
+<Layout title={produto.nome} description={produto.descricao}>
 
   <div class="breadcrumb">
     <div class="container">
-      <a href="/">Home</a> › <a href="/produtos">Produtos</a> › {produto.nome}
+      <a href="/">Home</a> &rsaquo; <a href="/produtos">Produtos</a> &rsaquo; {produto.nome}
     </div>
   </div>
 
@@ -39,39 +36,39 @@ if (!produto) {
     <div class="container">
       <div class="produto-layout">
 
-        <!-- Imagens -->
         <div class="produto-imagens">
           {produto.imagens?.length > 0 ? (
-            <div class="imagem-principal">
-              <img
-                src={getImageUrl(produto.imagens[0].imagem)}
-                alt={produto.nome}
-                width="600"
-                height="500"
-                loading="eager"
-                decoding="sync"
-                fetchpriority="high"
-              />
-            </div>
-            {produto.imagens.length > 1 && (
-              <div class="imagens-thumb">
-                {produto.imagens.map((img: any, i: number) => (
-                  <img
-                    src={getImageUrl(img.imagem)}
-                    alt={`${produto.nome} - foto ${i + 1}`}
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                  />
-                ))}
+            <div>
+              <div class="imagem-principal">
+                <img
+                  src={getImageUrl(produto.imagens[0].imagem)}
+                  alt={produto.nome}
+                  width="600"
+                  height="500"
+                  loading="eager"
+                  decoding="sync"
+                  fetchpriority="high"
+                />
               </div>
-            )}
+              {produto.imagens.length > 1 && (
+                <div class="imagens-thumb">
+                  {produto.imagens.map((img: any, i: number) => (
+                    <img
+                      src={getImageUrl(img.imagem)}
+                      alt={`foto ${i + 1}`}
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
             <div class="imagem-placeholder">💧</div>
           )}
         </div>
 
-        <!-- Informações -->
         <div class="produto-detalhes">
           <div class="section-tag">Purificador Everest</div>
           <h1>{produto.nome}</h1>
@@ -79,7 +76,7 @@ if (!produto) {
 
           {produto.especificacoes?.length > 0 && (
             <div class="especificacoes">
-              <h2>Especificações técnicas</h2>
+              <h2>Especificacoes tecnicas</h2>
               <table>
                 {produto.especificacoes.map((esp: any) => (
                   <tr>
@@ -93,14 +90,13 @@ if (!produto) {
 
           <div class="produto-cta">
             <a href={whatsappLink} target="_blank" class="btn-whatsapp">
-              Solicitar orçamento pelo WhatsApp
+              Solicitar orcamento pelo WhatsApp
             </a>
-            <p class="instalacao-nota">✓ Instalação gratuita em Florianópolis e região</p>
+            <p class="instalacao-nota">Instalacao gratuita em Florianopolis e regiao</p>
           </div>
         </div>
       </div>
 
-      <!-- Conteúdo rico -->
       {produto.conteudo && (
         <div class="produto-conteudo">
           <div set:html={produto.conteudo} />
@@ -108,26 +104,6 @@ if (!produto) {
       )}
     </div>
   </section>
-
-  <!-- JSON-LD Product -->
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": produto.nome,
-    "description": produto.descricao,
-    "brand": {
-      "@type": "Brand",
-      "name": "Everest"
-    },
-    "offers": {
-      "@type": "Offer",
-      "availability": "https://schema.org/InStock",
-      "seller": {
-        "@type": "Organization",
-        "name": "Soft Floripa"
-      }
-    }
-  })} />
 
 </Layout>
 
@@ -139,54 +115,38 @@ if (!produto) {
     border-bottom: 1px solid #e5e7eb;
     background: #f9fafb;
   }
-
-  .breadcrumb a {
-    color: #0055A5;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .produto-section {
-    padding: 48px 0 64px;
-  }
-
+  .breadcrumb a { color: #0055A5; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .produto-section { padding: 48px 0 64px; }
   .produto-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     margin-bottom: 48px;
   }
-
   .imagem-principal {
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid #e5e7eb;
     background: #e6f1fb;
   }
-
   .imagem-principal img {
     width: 100%;
     height: 420px;
     object-fit: cover;
   }
-
   .imagens-thumb {
     display: flex;
     gap: 8px;
     margin-top: 8px;
   }
-
   .imagens-thumb img {
     width: 72px;
     height: 72px;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
-    cursor: pointer;
   }
-
   .imagem-placeholder {
     height: 420px;
     background: #e6f1fb;
@@ -196,7 +156,6 @@ if (!produto) {
     font-size: 96px;
     border-radius: 12px;
   }
-
   .section-tag {
     display: inline-block;
     font-size: 12px;
@@ -206,25 +165,18 @@ if (!produto) {
     border-radius: 20px;
     margin-bottom: 12px;
   }
-
   .produto-detalhes h1 {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 16px;
-    line-height: 1.2;
   }
-
   .produto-desc {
     font-size: 15px;
     color: #4b5563;
     line-height: 1.7;
     margin-bottom: 24px;
   }
-
-  .especificacoes {
-    margin-bottom: 32px;
-  }
-
+  .especificacoes { margin-bottom: 32px; }
   .especificacoes h2 {
     font-size: 16px;
     font-weight: 600;
@@ -232,30 +184,11 @@ if (!produto) {
     padding-bottom: 8px;
     border-bottom: 1px solid #e5e7eb;
   }
-
-  .especificacoes table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .especificacoes tr {
-    border-bottom: 1px solid #f3f4f6;
-  }
-
-  .especificacoes td {
-    padding: 10px 0;
-    font-size: 14px;
-  }
-
-  .esp-item {
-    color: #6b7280;
-    width: 50%;
-  }
-
-  .esp-valor {
-    font-weight: 500;
-  }
-
+  .especificacoes table { width: 100%; border-collapse: collapse; }
+  .especificacoes tr { border-bottom: 1px solid #f3f4f6; }
+  .especificacoes td { padding: 10px 0; font-size: 14px; }
+  .esp-item { color: #6b7280; width: 50%; }
+  .esp-valor { font-weight: 500; }
   .btn-whatsapp {
     display: block;
     background: #25D366;
@@ -268,15 +201,8 @@ if (!produto) {
     margin-bottom: 12px;
     transition: background 0.2s;
   }
-
   .btn-whatsapp:hover { background: #1da851; }
-
-  .instalacao-nota {
-    font-size: 13px;
-    color: #059669;
-    text-align: center;
-  }
-
+  .instalacao-nota { font-size: 13px; color: #059669; text-align: center; }
   .produto-conteudo {
     border-top: 1px solid #e5e7eb;
     padding-top: 40px;
@@ -285,21 +211,9 @@ if (!produto) {
     color: #374151;
     max-width: 800px;
   }
-
-  .produto-conteudo h2 {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 24px 0 12px;
-  }
-
-  .produto-conteudo h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 20px 0 10px;
-  }
-
+  .produto-conteudo h2 { font-size: 22px; font-weight: 700; margin: 24px 0 12px; }
+  .produto-conteudo h3 { font-size: 18px; font-weight: 600; margin: 20px 0 10px; }
   .produto-conteudo p { margin-bottom: 16px; }
-
   @media (max-width: 768px) {
     .produto-layout { grid-template-columns: 1fr; }
     .imagem-principal img { height: 280px; }
