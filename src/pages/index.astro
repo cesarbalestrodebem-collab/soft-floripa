@@ -355,6 +355,8 @@ const postsDestaque = posts.filter((p: any) => p.destaque).slice(0, 3)
   .empty-state { text-align: center; padding: 48px; color: #6b7280; }
   @media (max-width: 768px) {
     .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+    .benefit-item:nth-child(2) { border-right: none; }
+    .benefit-item:nth-child(3) { border-right: 1px solid #e5e7eb; }
     .produtos-grid { grid-template-columns: 1fr; }
     .features-grid { grid-template-columns: repeat(2, 1fr); }
     .blog-grid { grid-template-columns: 1fr; }
