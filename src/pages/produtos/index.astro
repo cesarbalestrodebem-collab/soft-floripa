@@ -1,0 +1,193 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getProdutos, getConfiguracoes, getImageUrl } from '../../lib/payload'
+
+const produtos = await getProdutos()
+const config = await getConfiguracoes()
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Quero mais informações sobre os purificadores Everest.`
+---
+
+<Layout
+  title="Purificadores de Água Everest"
+  description="Conheça a linha completa de purificadores Everest disponíveis na Soft Floripa. Modelos para residências e empresas em Florianópolis."
+>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag">Produtos Everest</div>
+      <h1>Purificadores de Água Everest</h1>
+      <p>Linha completa com instalação gratuita em Florianópolis e região</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {produtos.length > 0 ? (
+        <div class="produtos-grid">
+          {produtos.map((produto: any) => (
+            <a href={`/produtos/${produto.slug}`} class="produto-card">
+              <div class="produto-img">
+                {produto.imagens?.[0]?.imagem ? (
+                  <img
+                    src={getImageUrl(produto.imagens[0].imagem)}
+                    alt={produto.nome}
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="produto-placeholder">💧</div>
+                )}
+              </div>
+              <div class="produto-info">
+                <h2>{produto.nome}</h2>
+                <p>{produto.descricao}</p>
+                <span class="btn-card">Ver detalhes</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <p>Nenhum produto cadastrado ainda.</p>
+          <p>Acesse o admin do CMS para cadastrar produtos.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="cta-whatsapp">
+    <div class="container">
+      <h2>Não sabe qual modelo escolher?</h2>
+      <p>Fale com nosso especialista e encontre o purificador ideal para você.</p>
+      <a href={whatsappLink} target="_blank" class="btn-primary">Falar pelo WhatsApp</a>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .page-hero {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 12px;
+    color: #0055A5;
+    background: #e6f1fb;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .page-hero h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .page-hero p {
+    font-size: 15px;
+    color: #6b7280;
+  }
+
+  .section { padding: 64px 0; }
+
+  .produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .produto-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .produto-card:hover {
+    border-color: #0055A5;
+    transform: translateY(-2px);
+  }
+
+  .produto-img {
+    height: 220px;
+    background: #e6f1fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .produto-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .produto-placeholder { font-size: 72px; }
+
+  .produto-info { padding: 20px; }
+
+  .produto-info h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .produto-info p {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .btn-card {
+    display: inline-block;
+    background: #0055A5;
+    color: white;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 8px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 64px;
+    color: #6b7280;
+  }
+
+  .cta-whatsapp {
+    background: #0055A5;
+    color: white;
+    text-align: center;
+    padding: 64px 0;
+  }
+
+  .cta-whatsapp h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .cta-whatsapp p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 24px;
+  }
+
+  .cta-whatsapp .btn-primary {
+    background: white;
+    color: #0055A5;
+  }
+
+  @media (max-width: 768px) {
+    .produtos-grid { grid-template-columns: 1fr; }
+  }
+</style>

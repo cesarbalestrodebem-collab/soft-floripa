@@ -1,0 +1,245 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getPosts, getPost, getConfiguracoes, getImageUrl } from '../../lib/payload'
+
+export async function getStaticPaths() {
+  try {
+    const posts = await getPosts()
+    if (!posts || posts.length === 0) return []
+    return posts.map((post: any) => ({
+      params: { slug: post.slug },
+    }))
+  } catch {
+    return []
+  }
+}
+
+const { slug } = Astro.params
+const post = await getPost(slug!)
+const config = await getConfiguracoes()
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Vi o artigo no blog e quero saber mais sobre os purificadores Everest.`
+
+if (!post) {
+  return Astro.redirect('/blog')
+}
+
+function formatDate(date: string) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'America/Sao_Paulo',
+  }).format(new Date(date))
+}
+---
+
+<Layout
+  title={post.titulo}
+  description={post.resumo}
+  image={post.imagemCapa ? getImageUrl(post.imagemCapa) : undefined}
+>
+
+  <div class="breadcrumb">
+    <div class="container">
+      <a href="/">Home</a> › <a href="/blog">Blog</a> › {post.titulo}
+    </div>
+  </div>
+
+  <article class="article-section">
+    <div class="container">
+      <div class="article-header">
+        <div class="section-tag">Blog</div>
+        <h1>{post.titulo}</h1>
+        {post.dataPublicacao && (
+          <time class="article-date" datetime={post.dataPublicacao}>
+            {formatDate(post.dataPublicacao)}
+          </time>
+        )}
+        <p class="article-resumo">{post.resumo}</p>
+      </div>
+
+      {post.imagemCapa && (
+        <div class="article-capa">
+          <img
+            src={getImageUrl(post.imagemCapa)}
+            alt={post.titulo}
+            width="900"
+            height="400"
+            loading="eager"
+            decoding="sync"
+            fetchpriority="high"
+          />
+        </div>
+      )}
+
+      <div class="article-content">
+        <div set:html={post.conteudo} />
+      </div>
+
+      <div class="article-cta">
+        <h3>Gostou do conteúdo?</h3>
+        <p>Fale com nosso especialista e encontre o purificador ideal para você.</p>
+        <a href={whatsappLink} target="_blank" class="btn-whatsapp">
+          Falar pelo WhatsApp
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.titulo,
+    "description": post.resumo,
+    "datePublished": post.dataPublicacao,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Soft Floripa",
+      "url": "https://softfloripa.com.br"
+    }
+  })} />
+
+</Layout>
+
+<style>
+  .breadcrumb {
+    padding: 12px 0;
+    font-size: 13px;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+
+  .breadcrumb a { color: #0055A5; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .article-section { padding: 48px 0 64px; }
+
+  .article-header {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    text-align: center;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 12px;
+    color: #0055A5;
+    background: #e6f1fb;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .article-header h1 {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .article-date {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 16px;
+  }
+
+  .article-resumo {
+    font-size: 16px;
+    color: #4b5563;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .article-capa {
+    max-width: 900px;
+    margin: 0 auto 48px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .article-capa img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .article-content {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #374151;
+  }
+
+  .article-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 32px 0 16px;
+    color: #111827;
+  }
+
+  .article-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+    color: #111827;
+  }
+
+  .article-content p { margin-bottom: 20px; }
+
+  .article-content ul, .article-content ol {
+    margin: 0 0 20px 24px;
+  }
+
+  .article-content li { margin-bottom: 8px; }
+
+  .article-content details {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+
+  .article-content summary {
+    font-weight: 600;
+    cursor: pointer;
+    color: #0055A5;
+  }
+
+  .article-cta {
+    max-width: 720px;
+    margin: 48px auto 0;
+    background: #f0f7ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .article-cta h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .article-cta p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 20px;
+  }
+
+  .btn-whatsapp {
+    display: inline-block;
+    background: #25D366;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .btn-whatsapp:hover { background: #1da851; }
+</style>

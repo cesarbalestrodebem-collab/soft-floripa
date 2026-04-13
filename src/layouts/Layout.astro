@@ -1,23 +1,426 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+---
+import { getConfiguracoes } from '../lib/payload'
+
+export interface Props {
+  title: string
+  description?: string
+  image?: string
+  canonical?: string
+}
+
+const {
+  title,
+  description = 'Revendedora autorizada Everest em Florianópolis. Purificadores de água com instalação gratuita, atendimento local e garantia de fábrica.',
+  image = '/og-image.jpg',
+  canonical,
+} = Astro.props
+
+const config = await getConfiguracoes()
+const url = canonical || Astro.url.href
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Quero mais informações sobre os purificadores Everest.`
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Soft Floripa — Purificadores Everest em Florianópolis</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- JSON-LD LocalBusiness -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Soft Floripa — Purificadores Everest",
+      "description": description,
+      "url": "https://softfloripa.com.br",
+      "telephone": config.whatsapp1 ? `+55${config.whatsapp1}` : "+5548999440178",
+      "email": config.email || "contato@softfloripa.com.br",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "R. Elesbão Pinto da Luz, 718 - Sala 2",
+        "addressLocality": "Florianópolis",
+        "addressRegion": "SC",
+        "postalCode": "88095-500",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -27.6136,
+        "longitude": -48.5139
+      },
+      "openingHours": "Mo-Sa 08:00-18:00",
+      "sameAs": [
+        config.instagram || "https://www.instagram.com/softfloripa/",
+        config.youtube || "https://www.youtube.com/@softfloripa56"
+      ]
+    })} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="container">
+        <a href="/" class="logo">
+          <span class="logo-sf">SF</span>
+          <div>
+            <div class="logo-name">Soft Floripa</div>
+            <div class="logo-sub">Revendedora Everest · Florianópolis</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="/">Home</a>
+          <a href="/produtos">Purificadores</a>
+          <a href="/blog">Blog</a>
+          <a href="/sobre">Sobre</a>
+          <a href="/contato">Contato</a>
+        </nav>
+        <a href={whatsappLink} target="_blank" class="btn-whatsapp-nav">
+          Fale pelo WhatsApp
+        </a>
+      </div>
+    </header>
+
+    <!-- Conteúdo -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">
+              <span class="logo-sf">SF</span>
+              <span>Soft Floripa</span>
+            </div>
+            <p class="footer-desc">Revendedora autorizada Everest em Florianópolis e região.</p>
+            <p class="footer-cnpj">CNPJ: {config.cnpj || '36.236.067/0001-77'}</p>
+          </div>
+          <div>
+            <h3>Navegação</h3>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/produtos">Purificadores</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/sobre">Sobre</a></li>
+              <li><a href="/contato">Contato</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Contato</h3>
+            <ul>
+              <li><a href={whatsappLink} target="_blank">(48) 9 9944-0178</a></li>
+              <li><a href="tel:4840092250">(48) 4009-2250</a></li>
+              <li><a href={`mailto:${config.email || 'contato@softfloripa.com.br'}`}>{config.email || 'contato@softfloripa.com.br'}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Endereço</h3>
+            <p>{config.endereco || 'R. Elesbão Pinto da Luz, 718 - Sala 2 - Jardim Atlântico, Florianópolis - SC'}</p>
+            <div class="social-links">
+              <a href={config.instagram || 'https://www.instagram.com/softfloripa/'} target="_blank">Instagram</a>
+              <a href={config.youtube || 'https://www.youtube.com/@softfloripa56'} target="_blank">YouTube</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© {new Date().getFullYear()} Soft Floripa. Todos os direitos reservados.</p>
+          <a href="https://www.compraeverest.com.br" target="_blank">Site oficial Everest</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- WhatsApp flutuante -->
+    <a href={whatsappLink} target="_blank" class="whatsapp-float" aria-label="Fale pelo WhatsApp">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    </a>
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --blue: #0055A5;
+    --blue-light: #e6f1fb;
+    --blue-dark: #003d7a;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #ffffff;
+    --bg-secondary: #f9fafb;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    background: var(--bg);
+  }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; height: auto; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Navbar */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+  }
+
+  .navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .logo-sf {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue); }
+
+  .btn-whatsapp-nav {
+    background: var(--blue);
+    color: white !important;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .btn-whatsapp-nav:hover { background: var(--blue-dark); }
+
+  /* Footer */
+  .footer {
+    background: #1a1a2e;
+    color: #e5e7eb;
+    padding: 48px 0 24px;
+    margin-top: 64px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .footer-desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .footer-cnpj {
+    font-size: 11px;
+    color: #6b7280;
+  }
+
+  .footer h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .footer ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer ul a {
+    font-size: 13px;
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+
+  .footer ul a:hover { color: white; }
+
+  .footer p {
+    font-size: 13px;
+    color: #9ca3af;
+    line-height: 1.6;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .social-links a {
+    font-size: 12px;
+    color: #9ca3af;
+    border: 1px solid #374151;
+    padding: 4px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+
+  .social-links a:hover {
+    color: white;
+    border-color: white;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #374151;
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .footer-bottom a {
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+
+  .footer-bottom a:hover { color: white; }
+
+  /* WhatsApp float */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 999;
+    transition: transform 0.2s;
+  }
+
+  .whatsapp-float:hover { transform: scale(1.1); }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--blue-dark); }
+
+  .btn-outline {
+    display: inline-block;
+    border: 2px solid white;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    background: white;
+    color: var(--blue);
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
 </style>
