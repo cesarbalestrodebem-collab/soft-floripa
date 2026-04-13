@@ -1,0 +1,209 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { getConfiguracoes } from '../lib/payload'
+
+const config = await getConfiguracoes()
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Ola! Quero mais informacoes sobre os purificadores Everest.`
+---
+
+<Layout
+  title="Sobre a Soft Floripa"
+  description="Conheca a Soft Floripa, revendedora autorizada Everest em Florianopolis. Atendimento local, instalacao gratuita e suporte especializado."
+>
+
+  <section class="page-hero">
+    <div class="container">
+      <div class="section-tag">Sobre nos</div>
+      <h1>Soft Floripa</h1>
+      <p>Revendedora autorizada Everest em Florianopolis</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="sobre-grid">
+        <div class="sobre-content">
+          <h2>Quem somos</h2>
+          <p>A Soft Floripa e uma revendedora autorizada da marca Everest, especializada em purificadores de agua para residencias e empresas em Florianopolis e regiao.</p>
+          <p>Atuamos com foco em atendimento personalizado, instalacao profissional gratuita e suporte tecnico especializado, garantindo que nossos clientes tenham sempre acesso a agua pura e gelada com a qualidade que so a Everest oferece.</p>
+          <p>Com anos de experiencia no mercado catarinense, nos tornamos referencia em solucoes de purificacao de agua, atendendo residencias, escritorios, clinicas e comercios em toda a Grande Florianopolis.</p>
+
+          <h2>Nossa missao</h2>
+          <p>Oferecer agua pura, gelada e saudavel para as familias e empresas de Florianopolis, com o melhor custo-beneficio do mercado e atendimento humanizado.</p>
+
+          <h2>Por que escolher a Soft Floripa?</h2>
+          <ul>
+            <li>Revendedora autorizada com produto original Everest</li>
+            <li>Instalacao gratuita em Florianopolis e regiao</li>
+            <li>Tecnicos especializados e certificados</li>
+            <li>Suporte pos-venda e assistencia tecnica</li>
+            <li>Refis originais sempre disponiveis</li>
+            <li>Atendimento pelo WhatsApp</li>
+          </ul>
+        </div>
+
+        <div class="sobre-info">
+          <div class="info-card">
+            <h3>Informacoes</h3>
+            <div class="info-item">
+              <span class="info-label">CNPJ</span>
+              <span>{config.cnpj || '36.236.067/0001-77'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Endereco</span>
+              <span>R. Elesbao Pinto da Luz, 718 - Sala 2 - Jardim Atlantico, Florianopolis - SC</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">WhatsApp</span>
+              <a href={whatsappLink} target="_blank">(48) 9 9944-0178</a>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Telefone</span>
+              <a href="tel:4840092250">(48) 4009-2250</a>
+            </div>
+            <div class="info-item">
+              <span class="info-label">E-mail</span>
+              <a href={`mailto:${config.email || 'contato@softfloripa.com.br'}`}>{config.email || 'contato@softfloripa.com.br'}</a>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Horario</span>
+              <span>Segunda a Sabado, 8h as 18h</span>
+            </div>
+          </div>
+
+          <div class="everest-card">
+            <h3>Revendedora oficial</h3>
+            <p>Somos revendedores autorizados da marca Everest, garantindo produtos originais com garantia de fabrica.</p>
+            <a href="https://www.compraeverest.com.br" target="_blank" class="btn-outline-blue">Site oficial Everest</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-whatsapp">
+    <div class="container">
+      <h2>Fale com a Soft Floripa</h2>
+      <p>Entre em contato e solicite um orcamento sem compromisso.</p>
+      <a href={whatsappLink} target="_blank" class="btn-primary">Falar pelo WhatsApp</a>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .page-hero {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 48px 0;
+    text-align: center;
+  }
+  .section-tag {
+    display: inline-block;
+    font-size: 12px;
+    color: #0055A5;
+    background: #e6f1fb;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .page-hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  .page-hero p { font-size: 15px; color: #6b7280; }
+  .section { padding: 64px 0; }
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+  }
+  .sobre-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 32px 0 16px;
+    color: #111827;
+  }
+  .sobre-content h2:first-child { margin-top: 0; }
+  .sobre-content p {
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .sobre-content ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sobre-content li {
+    font-size: 14px;
+    color: #374151;
+    padding-left: 20px;
+    position: relative;
+  }
+  .sobre-content li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+  }
+  .info-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .info-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  .info-label {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .info-item a { color: #0055A5; }
+  .info-item a:hover { text-decoration: underline; }
+  .everest-card {
+    background: #e6f1fb;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .everest-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .everest-card p { font-size: 13px; color: #4b5563; margin-bottom: 16px; line-height: 1.5; }
+  .btn-outline-blue {
+    display: inline-block;
+    border: 1.5px solid #0055A5;
+    color: #0055A5;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-outline-blue:hover { background: #0055A5; color: white; }
+  .cta-whatsapp {
+    background: #0055A5;
+    color: white;
+    text-align: center;
+    padding: 64px 0;
+  }
+  .cta-whatsapp h2 { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+  .cta-whatsapp p { font-size: 15px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
+  .cta-whatsapp .btn-primary { background: white; color: #0055A5; }
+  @media (max-width: 768px) {
+    .sobre-grid { grid-template-columns: 1fr; }
+  }
+</style>S
