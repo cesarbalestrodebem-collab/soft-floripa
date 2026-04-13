@@ -359,7 +359,10 @@ const postsDestaque = posts.filter((p: any) => p.destaque).slice(0, 3)
     .benefit-item:nth-child(3) { border-right: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb; }
     .benefit-item:nth-child(4) { border-top: 1px solid #e5e7eb; }
     .produtos-grid { grid-template-columns: 1fr; }
-    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 4px; }
+    .feature-card { padding: 20px 16px; display: flex; flex-direction: column; align-items: center; height: 100%; }
+    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; }
     .blog-grid { grid-template-columns: 1fr; }
   }
 </style>
