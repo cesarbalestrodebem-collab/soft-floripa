@@ -5,364 +5,347 @@ import { getProdutos, getPosts, getConfiguracoes, getImageUrl } from '../lib/pay
 const produtos = await getProdutos()
 const posts = await getPosts()
 const config = await getConfiguracoes()
-const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Ola! Quero mais informacoes sobre os purificadores Everest.`
+const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Quero mais informações sobre os purificadores Everest.`
 const produtosDestaque = produtos.filter((p: any) => p.destaque).slice(0, 3)
 const postsDestaque = posts.filter((p: any) => p.destaque).slice(0, 3)
+
+// Gerar JSON-LD dinâmico de Produtos para motores de busca e IAs lerem a vitrine da Home
+const jsonLdProducts = produtosDestaque.map((produto: any) => ({
+  "@type": "Product",
+  "name": produto.nome,
+  "description": produto.descricao,
+  "image": produto.imagens?.[0]?.imagem ? getImageUrl(produto.imagens[0].imagem) : undefined,
+  "brand": {
+    "@type": "Brand",
+    "name": "Everest"
+  },
+  "offers": {
+    "@type": "Offer",
+    "availability": "https://schema.org/InStock",
+    "url": `https://softfloripa.com.br/produtos/${produto.slug}`
+  }
+}));
 ---
 
-<Layout title="Purificadores de Agua Everest em Florianopolis" description="Revendedora autorizada Everest em Florianopolis. Purificadores de agua com Instalacao profissional, atendimento local e garantia de fabrica.">
+<Layout 
+  title="Purificadores de Água Everest em Florianópolis" 
+  description="Encontre seu purificador Everest na Soft Floripa. Alta tecnologia em refrigeração, remoção de cloro e serviço autorizado de instalação em Santa Catarina."
+  keyword="Purificadores Everest"
+>
 
-  <section class="hero-banners">
-    <div class="banner-slider">
-      <div class="banner-slide active">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/banner1-celular.jpg" />
-          <img src="/banner1.jpg" alt="Purificadores Everest em Florianopolis" width="1920" height="600" loading="eager" decoding="sync" fetchpriority="high" />
-        </picture>
+  <section class="hero-banners" aria-label="Banners de Destaque Everest">
+    <!-- Overlay Glass Premium do Hero -->
+    <div class="hero-glass-overlay">
+      <div class="glass-content">
+        <div class="section-tag glow">Original Everest</div>
+        <h1 class="hero-title">Purificadores de Água Everest em Florianópolis</h1>
+        <p class="hero-subtitle">Água puríssima e gelada 24h por dia. Alta tecnologia em refrigeração térmica, garantia oficial de fábrica e atendimento cortesia Soft Floripa.</p>
+        <div class="hero-actions">
+           <a href="#catalogo" class="btn-primary hero-btn" aria-label="Explorar Catálogo">Ver Modelos e Cores</a>
+        </div>
       </div>
-      <div class="banner-slide">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/banner2-celular.jpg" />
-          <img src="/banner2.jpg" alt="Purificadores Everest - Instalacao profissional" width="1920" height="600" loading="lazy" />
-        </picture>
-      </div>
-      <div class="banner-slide">
-        <picture>
-          <source media="(max-width: 768px)" srcset="/banner3-celular.jpg" />
-          <img src="/banner3.jpg" alt="Purificadores Everest - Revendedora autorizada" width="1920" height="600" loading="lazy" />
-        </picture>
-      </div>
-      <button class="banner-prev" aria-label="Banner anterior">&#8249;</button>
-      <button class="banner-next" aria-label="Proximo banner">&#8250;</button>
-      <div class="banner-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
+    </div>
+    
+    <div class="banner-static" style="width: 100%; height: 100%;">
+      <picture>
+        <source media="(max-width: 768px)" srcset="/banner1-celular.jpg" />
+        <img src="/banner1.jpg" alt="Visão geral dos Purificadores Everest para residências em Florianópolis" width="1920" height="700" loading="eager" decoding="sync" fetchpriority="high" style="width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.1);" />
+      </picture>
     </div>
   </section>
 
-  <section class="benefits">
+  <!-- Injeção dos dados estruturados para AI e SERP -->
+  {jsonLdProducts.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org/",
+      "@type": "ItemList",
+      "itemListElement": jsonLdProducts.map((p: any, index: number) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": p
+      }))
+    })} />
+  )}
+
+  <section class="benefits" aria-label="Vantagens Exclusivas Soft Floripa">
     <div class="container">
       <div class="benefits-grid">
-        <div class="benefit-item">
-          <div class="benefit-icon">🚚</div>
-          <div class="benefit-title">Entrega local</div>
-          <div class="benefit-desc">Atendemos toda Florianopolis e regiao</div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">🔧</div>
-          <div class="benefit-title">Instalação profissional</div>
-          <div class="benefit-desc">Técnicos especializados</div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">💳</div>
-          <div class="benefit-title">Parcelamos no cartao de crédito</div>
-          <div class="benefit-desc">À vista tem desconto</div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">✅</div>
-          <div class="benefit-title">Revenda autorizada</div>
-          <div class="benefit-desc">Produto original com garantia Everest</div>
-        </div>
+        <article class="benefit-item">
+          <div class="benefit-icon" aria-hidden="true">🚚</div>
+          <h2 class="benefit-title">Logística Local</h2>
+          <p class="benefit-desc">Entrega ágil em Florianópolis, São José e Palhoça.</p>
+        </article>
+        <article class="benefit-item">
+          <div class="benefit-icon" aria-hidden="true">🔧</div>
+          <h2 class="benefit-title">Instalação Técnica</h2>
+          <p class="benefit-desc">Equipe técnica certificada pela fábrica Everest.</p>
+        </article>
+        <article class="benefit-item">
+          <div class="benefit-icon" aria-hidden="true">💳</div>
+          <h2 class="benefit-title">Pagamento Flexível</h2>
+          <p class="benefit-desc">Condições exclusivas de parcelamento no cartão.</p>
+        </article>
+        <article class="benefit-item">
+          <div class="benefit-icon" aria-hidden="true">✅</div>
+          <h2 class="benefit-title">Autorizada Oficial</h2>
+          <p class="benefit-desc">Aparelhos 100% originais com garantia de compressor.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="catalogo" aria-label="Catálogo de Purificadores Everest">
     <div class="container">
-      <div class="section-header">
-        <div class="section-tag">Produtos Everest</div>
-        <h2>Purificadores em destaque</h2>
-        <p>Linha completa Everest para todos os ambientes</p>
-      </div>
+      <header class="section-header">
+        <div class="section-tag">Coleção Oficial</div>
+        <h2>Purificadores Mais Buscados</h2>
+        <p>Soluções ideais em hidratação com excelência em refrigeração térmica.</p>
+      </header>
       {produtosDestaque.length > 0 ? (
         <div class="produtos-grid">
           {produtosDestaque.map((produto: any) => (
-            <a href={`/produtos/${produto.slug}`} class="produto-card">
-              <div class="produto-img">
-                {produto.imagens?.[0]?.imagem ? (
-                  <img src={getImageUrl(produto.imagens[0].imagem)} alt={produto.nome} width="300" height="300" loading="lazy" />
-                ) : (
-                  <div class="produto-placeholder">💧</div>
-                )}
-              </div>
-              <div class="produto-info">
-                <h3>{produto.nome}</h3>
-                <p>{produto.descricao}</p>
-                <span class="btn-card">Saiba mais</span>
-              </div>
-            </a>
+            <article class="produto-card glass-card">
+              <a href={`/produtos/${produto.slug}`} class="produto-link" aria-label={`Ver especificações completas do Purificador ${produto.nome}`}>
+                <div class="produto-img">
+                  {produto.imagens?.[0]?.imagem ? (
+                    <img src={getImageUrl(produto.imagens[0].imagem)} alt={`Cores e design do Purificador Everest ${produto.nome}`} width="300" height="300" loading="lazy" />
+                  ) : (
+                    <div class="produto-placeholder" aria-hidden="true">💧</div>
+                  )}
+                </div>
+                <div class="produto-info">
+                  <h3>{produto.nome}</h3>
+                  <p>{produto.descricao}</p>
+                  <span class="btn-primary sm">Ver especificações</span>
+                </div>
+              </a>
+            </article>
           ))}
         </div>
       ) : (
         <div class="empty-state">
-          <p>Cadastre produtos no admin para exibi-los aqui.</p>
+          <p>Catálogo em sincronização com o sistema central.</p>
         </div>
       )}
       <div class="section-cta">
-        <a href="/produtos" class="btn-primary">Ver todos os purificadores</a>
+        <a href="/produtos" class="btn-outline">Consultar todos os modelos</a>
       </div>
     </div>
   </section>
 
-  <section class="section section-gray">
+  <section class="section bg-gradient" aria-label="Tecnologia da Marca Everest">
     <div class="container">
-      <div class="section-header">
-        <div class="section-tag">Por que Everest?</div>
-        <h2>Pureza, economia e qualidade</h2>
-      </div>
+      <header class="section-header light">
+        <div class="section-tag glow">Engenharia de Ponta</div>
+        <h2>Superioridade do Compressor Everest</h2>
+      </header>
       <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">❄️</div>
-          <h3>Água realmente gelada</h3>
-          <p>Sistema de compressor que garante água até 8 graus, mesmo no verão catarinense.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🛡️</div>
-          <h3>Filtragem avancada</h3>
-          <p>Remove cloro, impurezas, odores e sabores indesejados da água da rede.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">💰</div>
-          <h3>Economia real</h3>
-          <p>Elimine gastos com garrafoes e garrafas PET. Água pura direto do Purificador.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌱</div>
-          <h3>Sustentabilidade</h3>
-          <p>Reduza o descarte de plástico e contribua para um ambiente mais limpo em Floripa.</p>
-        </div>
+        <article class="feature-card glass-card-white">
+          <div class="feature-icon" aria-hidden="true">❄️</div>
+          <h3>Refrigeração Máxima</h3>
+          <p>Motor compressor potente assegura o fornecimento contínuo de água próxima aos 8 graus sem perda térmica no verão.</p>
+        </article>
+        <article class="feature-card glass-card-white">
+          <div class="feature-icon" aria-hidden="true">🛡️</div>
+          <h3>Filtração Bactericida</h3>
+          <p>O refil original bloqueia partículas, regula o pH, remove gostos residuais e retém o cloro excessivo da tubulação.</p>
+        </article>
+        <article class="feature-card glass-card-white">
+          <div class="feature-icon" aria-hidden="true">💰</div>
+          <h3>Custo-Benefício</h3>
+          <p>O preço gasto em galões de plástico se paga ao obter autonomia com uma fonte caseira purificada ligada na tomada.</p>
+        </article>
+        <article class="feature-card glass-card-white">
+          <div class="feature-icon" aria-hidden="true">🌱</div>
+          <h3>Preservação Ecológica</h3>
+          <p>Um aparelho neutraliza milhares de garrafas descartáveis poluidoras a longo prazo em nossa ilha.</p>
+        </article>
       </div>
     </div>
   </section>
 
   {postsDestaque.length > 0 && (
-    <section class="section">
+    <section class="section" aria-label="Blog de Saúde e Água">
       <div class="container">
-        <div class="section-header">
-          <div class="section-tag">Blog</div>
-          <h2>Ultimas do blog</h2>
-        </div>
+        <header class="section-header">
+          <div class="section-tag">Conhecimento</div>
+          <h2>Dicas sobre Vida Saudável</h2>
+        </header>
         <div class="blog-grid">
           {postsDestaque.map((post: any) => (
-            <a href={`/blog/${post.slug}`} class="blog-card">
-              {post.imagemCapa && (
-                <img src={getImageUrl(post.imagemCapa)} alt={post.titulo} width="400" height="200" loading="lazy" />
-              )}
-              <div class="blog-info">
-                <h3>{post.titulo}</h3>
-                <p>{post.resumo}</p>
-              </div>
-            </a>
+            <article class="blog-card glass-card">
+              <a href={`/blog/${post.slug}`} aria-label={`Ler o artigo completo: ${post.titulo}`}>
+                {post.imagemCapa && (
+                  <div class="blog-img-wrapper">
+                      <img src={getImageUrl(post.imagemCapa)} alt={`Capa ilustrativa do artigo ${post.titulo}`} width="400" height="200" loading="lazy" />
+                  </div>
+                )}
+                <div class="blog-info">
+                  <h3>{post.titulo}</h3>
+                  <p>{post.resumo}</p>
+                </div>
+              </a>
+            </article>
           ))}
         </div>
         <div class="section-cta">
-          <a href="/blog" class="btn-primary">Ver todos os posts</a>
+          <a href="/blog" class="btn-outline">Acessar guias e artigos</a>
         </div>
       </div>
     </section>
   )}
 
-  <section class="cta-whatsapp">
+  <section class="cta-banner-wrapper" aria-label="Módulo de Contato Imediato">
     <div class="container">
-      <h2>Fale com um especialista</h2>
-      <p>Tire suas duvidas e escolha o purificador ideal para sua necessidade.</p>
-      <a href={whatsappLink} target="_blank" class="btn-primary">Falar pelo WhatsApp agora</a>
+      <div class="cta-banner green-glass">
+         <h2>Avaliação de Ambiente sem Compromisso</h2>
+         <p>Nossos técnicos vão até o seu local sugerir a aparelhagem correta conforme sua vazão, fluxo hídrico e espaço.</p>
+         <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-primary glow-green">Acionar Consultor no WhatsApp</a>
+      </div>
     </div>
   </section>
 
 </Layout>
 
 <script>
-  const slides = document.querySelectorAll('.banner-slide')
-  const dots = document.querySelectorAll('.dot')
-  let current = 0
-
-  function goTo(index) {
-    slides[current].classList.remove('active')
-    dots[current].classList.remove('active')
-    current = (index + slides.length) % slides.length
-    slides[current].classList.add('active')
-    dots[current].classList.add('active')
-  }
-
-  document.querySelector('.banner-next')?.addEventListener('click', () => goTo(current + 1))
-  document.querySelector('.banner-prev')?.addEventListener('click', () => goTo(current - 1))
-  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)))
-  setInterval(() => goTo(current + 1), 5000)
+  // Hero convertido para estático conforme demanda de design. Carrossel removido.
 </script>
 
 <style>
-  .hero-banners { position: relative; width: 100%; overflow: hidden; }
-  .banner-slider { position: relative; width: 100%; }
-  .banner-slide { display: none; width: 100%; }
-  .banner-slide.active { display: block; }
-  .banner-slide picture, .banner-slide img {
-    width: 100%;
-    height: auto;
-    display: block;
-    max-height: 600px;
-    object-fit: cover;
+  /* Overlay Glass Premium do Hero */
+  .hero-glass-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center; pointer-events: none; padding: 100px 24px 24px 24px;
   }
-  .banner-prev, .banner-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.4);
-    color: white;
-    border: none;
-    font-size: 32px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
+  .glass-content {
+    background: rgba(0, 15, 30, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 32px;
+    padding: 64px 48px; max-width: 800px; text-align: center; color: white;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); pointer-events: auto;
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  .banner-prev:hover, .banner-next:hover { background: rgba(0,0,0,0.7); }
-  .banner-prev { left: 16px; }
-  .banner-next { right: 16px; }
-  .banner-dots {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-  }
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .dot.active { background: white; }
-  .benefits { border-bottom: 1px solid #e5e7eb; }
-  .benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .benefit-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 24px 16px;
-    border-right: 1px solid #e5e7eb;
-  }
+  .glass-content .section-tag { border-color: rgba(255,255,255,0.4); color: white; text-shadow: none; font-weight: 700; background: transparent; display: inline-block; margin-bottom: 24px;}
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-title { font-size: clamp(36px, 4vw, 56px); font-family: var(--font-heading); font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.5); text-wrap: balance;}
+  .hero-subtitle { font-size: clamp(16px, 1.8vw, 20px); font-family: var(--font-body); line-height: 1.6; margin-bottom: 40px; color: rgba(255,255,255,0.95); text-shadow: 0 2px 10px rgba(0,0,0,0.5); max-width: 600px; margin: 0 auto 40px;}
+  .hero-btn { display: inline-block; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); color: white; padding: 18px 40px; border-radius: 30px; font-weight: bold; font-family: var(--font-heading); border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s; box-shadow: 0 10px 25px rgba(10,132,255,0.4); text-decoration: none;}
+  .hero-btn:hover { transform: translateY(-3px) scale(1.05); background: white; color: var(--blue-dark); box-shadow: 0 15px 35px rgba(255,255,255,0.4); border-color: white;}
+
+  /* Slider Original MANTIDO */
+  .hero-banners { position: relative; width: 100%; height: 700px; overflow: hidden; background: var(--bg-secondary); }
+
+  
+  /* Benefícios Redesenhados */
+  .benefits { border-bottom: 1px solid var(--border); background: white; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .benefit-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 32px 16px; border-right: 1px solid var(--border); }
   .benefit-item:last-child { border-right: none; }
-  .benefit-icon { font-size: 24px; margin-bottom: 8px; }
-  .benefit-title { font-size: 13px; font-weight: 600; color: #0055A5; margin-bottom: 4px; }
-  .benefit-desc { font-size: 12px; color: #6b7280; }
-  .section { padding: 64px 0; }
-  .section-gray { background: #f9fafb; }
-  .section-header { text-align: center; margin-bottom: 40px; }
-  .section-tag {
-    display: inline-block;
-    font-size: 12px;
-    color: #0055A5;
-    background: #e6f1fb;
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 12px;
+  .benefit-icon { font-size: 28px; margin-bottom: 12px; }
+  .benefit-title { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--blue-dark); margin-bottom: 6px; }
+  .benefit-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  
+  /* Seções Padronizadas */
+  .section { padding: 80px 0; }
+  
+  .bg-gradient { 
+    background: linear-gradient(135deg, var(--blue-dark) 0%, rgba(0, 85, 165, 0.9) 100%), #0A192F; 
+    color: white; 
+    position: relative; overflow: hidden;
   }
-  .section-header h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  .section-header p { font-size: 15px; color: #6b7280; }
-  .produtos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 32px;
+  .bg-gradient::before {
+    content: ''; position: absolute; top: -50px; left: -50px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); border-radius: 50%;
   }
-  .produto-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .produto-card:hover { border-color: #0055A5; transform: translateY(-2px); }
-  .produto-img {
-    height: 200px;
-    background: #e6f1fb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-  .produto-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .section-header { text-align: center; margin-bottom: 48px; max-width: 700px; margin-inline: auto; }
+  .section-header.light h2, .section-header.light p { color: white; }
+  
+  .section-tag { display: inline-block; font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--blue-dark); background: var(--blue-light); padding: 6px 16px; border-radius: 30px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;}
+  .section-tag.glow { background: rgba(255,255,255,0.1); color: #93C5FD; border: 1px solid rgba(255,255,255,0.2); }
+  
+  .section-header h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+  .section-header p { font-size: 16px; color: var(--text-muted); }
+  
+  /* Glass Cards / Vitrine */
+  .produtos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 40px; }
+  .glass-card { background: white; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+  .glass-card:hover { transform: translateY(-4px); box-shadow: var(--glass-shadow); border-color: transparent; }
+  
+  .glass-card-white { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; color: white;}
+  .glass-card-white:hover { background: rgba(255,255,255,0.1); }
+  
+  .produto-link { display: flex; flex-direction: column; height: 100%; }
+  
+  .produto-img { height: 260px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 24px; position: relative;}
+  .produto-img img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); transition: transform 0.5s ease; }
+  .glass-card:hover .produto-img img { transform: scale(1.05); }
+
   .produto-placeholder { font-size: 64px; }
-  .produto-info { padding: 16px; }
-  .produto-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-  .produto-info p { font-size: 13px; color: #6b7280; margin-bottom: 16px; line-height: 1.5; }
-  .btn-card {
-    display: inline-block;
-    background: #0055A5;
-    color: white;
-    font-size: 13px;
-    padding: 8px 16px;
-    border-radius: 8px;
+  .produto-info { padding: 24px; background: white; flex: 1; display: flex; flex-direction: column; border-top: 1px solid rgba(0,0,0,0.02); }
+  .produto-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+  .produto-info p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1;}
+  
+  .btn-primary.sm { padding: 10px 20px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; width: 100%; text-align: center;}
+  .section-cta { text-align: center; margin-top: 40px; }
+  
+  /* Features Glassmorphism */
+  .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .feature-card { padding: 32px 24px; text-align: center; transition: transform 0.3s ease; }
+  .feature-icon { font-size: 40px; margin-bottom: 20px; display: inline-block;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
   }
-  .section-cta { text-align: center; margin-top: 32px; }
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+  .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: white; }
+  .feature-card p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  
+  /* Blog Cards */
+  .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .blog-card { border-radius: 16px; }
+  .blog-img-wrapper { height: 200px; width: 100%; overflow: hidden; }
+  .blog-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .blog-card:hover .blog-img-wrapper img { transform: scale(1.05); }
+  .blog-info { padding: 24px; }
+  .blog-info h3 { font-size: 17px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; color: var(--text); }
+  .blog-info p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  
+  /* CTA Modernizado */
+  .cta-banner-wrapper { padding: 80px 0 120px; }
+  .cta-banner { padding: 60px 48px; text-align: center; border-radius: 32px; position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(18, 140, 126, 0.15); }
+  
+  .green-glass {
+    background: linear-gradient(135deg, rgba(240, 253, 244, 0.9) 0%, rgba(220, 252, 231, 0.4) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.2); backdrop-filter: blur(10px);
   }
-  .feature-card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
+
+  .cta-banner h2 { font-size: 32px; font-weight: 800; margin-bottom: 16px; color: #064e3b; text-wrap: balance;}
+  .cta-banner p { font-size: 16px; color: #065f46; margin-bottom: 32px; max-width: 600px; margin-inline: auto;}
+  
+  .btn-primary.glow-green {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: auto; font-size: 16px; padding: 16px 36px; border-radius: 30px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
   }
-  .feature-icon { font-size: 32px; margin-bottom: 12px; }
-  .feature-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-  .feature-card p { font-size: 13px; color: #6b7280; line-height: 1.5; }
-  .blog-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 32px;
+  .btn-primary.glow-green:hover { box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4); transform: translateY(-2px); }
+  
+  .empty-state { text-align: center; padding: 64px; color: var(--text-muted); background: white; border-radius: 16px; border: 1px dashed var(--border); }
+  
+  .btn-outline { display: inline-flex; border: 2px solid var(--border); color: var(--blue-dark); padding: 12px 32px; border-radius: 12px; font-size: 15px; font-weight: 700; transition: all 0.2s; font-family: var(--font-heading);}
+  .btn-outline:hover { background: var(--bg-secondary); border-color: var(--blue-dark); }
+
+  @media (max-width: 992px) {
+    .produtos-grid, .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  .blog-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .blog-card:hover { border-color: #0055A5; }
-  .blog-card img { width: 100%; height: 180px; object-fit: cover; }
-  .blog-info { padding: 16px; }
-  .blog-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
-  .blog-info p { font-size: 13px; color: #6b7280; line-height: 1.5; }
-  .cta-whatsapp {
-    background: #0055A5;
-    color: white;
-    text-align: center;
-    padding: 64px 0;
-  }
-  .cta-whatsapp h2 { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
-  .cta-whatsapp p { font-size: 16px; color: rgba(255,255,255,0.85); margin-bottom: 24px; }
-  .cta-whatsapp .btn-primary { background: white; color: #0055A5; }
-  .cta-whatsapp .btn-primary:hover { background: #f0f7ff; }
-  .empty-state { text-align: center; padding: 48px; color: #6b7280; }
   @media (max-width: 768px) {
     .benefits-grid { grid-template-columns: repeat(2, 1fr); }
     .benefit-item:nth-child(2) { border-right: none; }
-    .benefit-item:nth-child(3) { border-right: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb; }
-    .benefit-item:nth-child(4) { border-top: 1px solid #e5e7eb; }
-    .produtos-grid { grid-template-columns: 1fr; }
-    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 4px; }
-    .feature-card { padding: 20px 16px; display: flex; flex-direction: column; align-items: center; height: 100%; }
-    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .feature-card p { font-size: 13px; }
-    .blog-grid { grid-template-columns: 1fr; }
+    .benefit-item:nth-child(3) { border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
+    .benefit-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none;}
+    
+    .section-header h2 { font-size: 28px; }
+    .cta-banner h2 { font-size: 26px; }
+    
+    .produtos-grid, .blog-grid, .features-grid { grid-template-columns: 1fr; }
+    .feature-card { padding: 24px 16px; }
+    .cta-banner { padding: 40px 24px; border-radius: 20px; }
+    
+    .glass-content { padding: 48px 24px; }
   }
 </style>

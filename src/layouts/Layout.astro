@@ -6,18 +6,29 @@ export interface Props {
   description?: string
   image?: string
   canonical?: string
+  keyword?: string // Palavra-chave principal para SEO
 }
 
 const {
   title,
-  description = 'Revendedora autorizada Everest em Florianópolis. Purificadores de água com instalação gratuita, atendimento local e garantia de fábrica.',
+  description = 'Purificadores Everest em Florianópolis. Instalação profissional gratuita, atendimento local e garantia de fábrica Soft Floripa.',
   image = '/og-image.jpg',
   canonical,
+  keyword = 'Purificadores Everest'
 } = Astro.props
 
 const config = await getConfiguracoes()
 const url = canonical || Astro.url.href
 const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=Olá! Quero mais informações sobre os purificadores Everest.`
+
+// Regra estrita de SEO (Meta Description até 135 caracteres com Keyword frontal)
+let safeDescription = description
+if (safeDescription.length > 135) {
+  safeDescription = safeDescription.substring(0, 132) + '...'
+}
+if (keyword && !safeDescription.toLowerCase().includes(keyword.toLowerCase())) {
+    safeDescription = `${keyword}: ${safeDescription}`.substring(0, 132) + '...'
+}
 ---
 
 <!DOCTYPE html>
@@ -25,15 +36,20 @@ const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Soft Floripa — Purificadores Everest em Florianópolis</title>
-    <meta name="description" content={description} />
+    <title>{title} | Soft Floripa</title>
+    <meta name="description" content={safeDescription} />
     <link rel="canonical" href={url} />
+
+    <!-- Google Fonts: Outfit (Headings) e DM Sans (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={safeDescription} />
     <meta property="og:image" content={image} />
     <meta property="og:locale" content="pt_BR" />
 
@@ -42,7 +58,7 @@ const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "Soft Floripa — Purificadores Everest",
-      "description": description,
+      "description": safeDescription,
       "url": "https://softfloripa.com.br",
       "telephone": config.whatsapp1 ? `+55${config.whatsapp1}` : "+5548999440178",
       "email": config.email || "contato@softfloripa.com.br",
@@ -70,27 +86,30 @@ const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
-    <!-- Navbar -->
-    <header class="navbar">
+    <!-- Navbar Semântica -->
+    <header class="navbar" id="main-header">
       <div class="container">
-        <a href="/" class="logo">
+        <a href="/" class="logo" aria-label="Logo Soft Floripa - Início">
           <span class="logo-sf">SF</span>
           <div>
             <div class="logo-name">Soft Floripa</div>
-            <div class="logo-sub">Revendedora Everest · Florianopolis</div>
+            <div class="logo-sub">Revendedora Everest</div>
           </div>
         </a>
-        <nav class="nav-links" id="nav-menu">
+        <nav class="nav-links" id="nav-menu" aria-label="Navegação Principal">
           <a href="/">Home</a>
           <a href="/produtos">Purificadores</a>
           <a href="/blog">Blog</a>
           <a href="/sobre">Sobre</a>
           <a href="/contato">Contato</a>
+          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-whatsapp-nav mobile-whatsapp-btn" aria-label="Falar com vendas via WhatsApp">
+            Falar no WhatsApp
+          </a>
         </nav>
-        <a href={whatsappLink} target="_blank" class="btn-whatsapp-nav desktop-only">
-          Fale pelo WhatsApp
+        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-whatsapp-nav desktop-only" aria-label="Falar com vendas via WhatsApp">
+          Falar no WhatsApp
         </a>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
+        <button class="hamburger" id="hamburger" aria-label="Abrir Menu de Navegação">
           <span></span>
           <span></span>
           <span></span>
@@ -98,13 +117,13 @@ const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=
       </div>
     </header>
 
-    <!-- Conteúdo -->
-    <main>
+    <!-- Conteúdo Central Estruturado (SEO Main Block) -->
+    <main id="main-content">
       <slot />
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- Footer Semântico -->
+    <footer class="footer" aria-label="Rodapé do Site">
       <div class="container">
         <div class="footer-grid">
           <div>
@@ -112,380 +131,245 @@ const whatsappLink = `https://wa.me/55${config.whatsapp1 || '48999440178'}?text=
               <span class="logo-sf">SF</span>
               <span>Soft Floripa</span>
             </div>
-            <p class="footer-desc">Revendedora autorizada Everest em Florianópolis e região.</p>
+            <p class="footer-desc">Revenda Autorizada Premium Everest para toda a região de Florianópolis.</p>
             <p class="footer-cnpj">CNPJ: {config.cnpj || '36.236.067/0001-77'}</p>
           </div>
-          <div>
-            <h3>Navegação</h3>
+          <nav aria-label="Navegação do Rodapé">
+            <h3>Links Rápidos</h3>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/produtos">Purificadores</a></li>
-              <li><a href="/blog">Blog</a></li>
-              <li><a href="/sobre">Sobre</a></li>
-              <li><a href="/contato">Contato</a></li>
+              <li><a href="/">Página Inicial</a></li>
+              <li><a href="/produtos">Catálogo de Purificadores</a></li>
+              <li><a href="/blog">Blog e Dicas</a></li>
+              <li><a href="/sobre">Nossa História</a></li>
+              <li><a href="/contato">Fale Conosco</a></li>
             </ul>
-          </div>
+          </nav>
           <div>
-            <h3>Contato</h3>
+            <h3>Central de Atendimento</h3>
             <ul>
-              <li><a href={whatsappLink} target="_blank">(48) 9 9944-0178</a></li>
+              <li><a href={whatsappLink} target="_blank" rel="noopener noreferrer">(48) 9 9944-0178</a></li>
               <li><a href="tel:4840092250">(48) 4009-2250</a></li>
               <li><a href={`mailto:${config.email || 'contato@softfloripa.com.br'}`}>{config.email || 'contato@softfloripa.com.br'}</a></li>
             </ul>
           </div>
           <div>
-            <h3>Endereço</h3>
+            <h3>Sede Local</h3>
             <p>{config.endereco || 'R. Elesbão Pinto da Luz, 718 - Sala 2 - Jardim Atlântico, Florianópolis - SC'}</p>
-            <div class="social-links">
-              <a href={config.instagram || 'https://www.instagram.com/softfloripa/'} target="_blank">Instagram</a>
-              <a href={config.youtube || 'https://www.youtube.com/@softfloripa56'} target="_blank">YouTube</a>
-            </div>
+            <nav class="social-links" aria-label="Redes Sociais">
+              <a href={config.instagram || 'https://www.instagram.com/softfloripa/'} target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href={config.youtube || 'https://www.youtube.com/@softfloripa56'} target="_blank" rel="noopener noreferrer">YouTube</a>
+            </nav>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>© {new Date().getFullYear()} Soft Floripa. Todos os direitos reservados. | Desenvolvido por <a href="https://magnivio.com.br/" target="_blank" style="color:#9ca3af;">Magnivio</a></p>
-          
+          <p>© {new Date().getFullYear()} Soft Floripa. Todos os direitos reservados. | Desenvolvido por <a href="https://magnivio.com.br/" target="_blank" rel="noopener noreferrer" style="color:#9ca3af;">Magnivio</a></p>
         </div>
       </div>
     </footer>
 
-    <!-- WhatsApp flutuante -->
-    <a href={whatsappLink} target="_blank" class="whatsapp-float" aria-label="Fale pelo WhatsApp">
+    <!-- WhatsApp flutuante c/ Glassmorphism -->
+    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="whatsapp-float pulse-hover" aria-label="Fale conosco via WhatsApp">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
     </a>
+
     <script>
-  const hamburger = document.getElementById('hamburger')
-  const navMenu = document.getElementById('nav-menu')
-  hamburger?.addEventListener('click', () => {
-    navMenu?.classList.toggle('open')
-  })
-  navMenu?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => navMenu.classList.remove('open'))
-  })
-</script>
+      const hamburger = document.getElementById('hamburger')
+      const navMenu = document.getElementById('nav-menu')
+      hamburger?.addEventListener('click', () => {
+        navMenu?.classList.toggle('open')
+        hamburger?.classList.toggle('open')
+      })
+      navMenu?.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navMenu?.classList.remove('open')
+          hamburger?.classList.remove('open')
+        })
+      })
+
+      // Lógica nativa de Scroll Glassmorphism na Navbar
+      const header = document.getElementById('main-header')
+      window.addEventListener('scroll', () => {
+        if(window.scrollY > 20) {
+          header?.classList.add('scrolled')
+        } else {
+          header?.classList.remove('scrolled')
+        }
+      }, {passive: true});
+    </script>
   </body>
 </html>
 
 <style is:global>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --blue: #0055A5;
+    --blue: #0A84FF;
     --blue-light: #e6f1fb;
-    --blue-dark: #003d7a;
-    --text: #1a1a1a;
-    --text-muted: #6b7280;
-    --border: #e5e7eb;
+    --blue-dark: #0055A5;
+    --teal: #128C7E;
+    
+    --text: #1f2937;
+    --text-muted: #4b5563;
+    --border: rgba(0, 85, 165, 0.12);
     --bg: #ffffff;
-    --bg-secondary: #f9fafb;
+    --bg-secondary: #f8fafc;
+
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 85, 165, 0.05);
+
+    --font-heading: 'Outfit', -apple-system, sans-serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-body);
     color: var(--text);
     line-height: 1.6;
     background: var(--bg);
+    -webkit-font-smoothing: antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); color: #111827; }
 
   a { color: inherit; text-decoration: none; }
   img { max-width: 100%; height: auto; }
 
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
   }
 
-  /* Navbar */
   .navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: white;
-    border-bottom: 1px solid var(--border);
-    padding: 12px 0;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255, 255, 255, 0.65); border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    padding: 16px 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .navbar::before { /* Borda reflexiva superior */
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+    opacity: 0.5; pointer-events: none;
+  }
+  .navbar.scrolled {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 10px 0; box-shadow: 0 15px 40px rgba(0, 85, 165, 0.1);
+    border-bottom: 1px solid rgba(0, 85, 165, 0.05);
   }
 
-  .navbar .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
+  .navbar .container { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-
+  .logo { display: flex; align-items: center; gap: 12px; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; z-index: 1001; text-decoration: none;}
+  .logo:hover { transform: scale(1.05); }
+  .logo:hover .logo-sf { transform: rotate(-10deg); }
   .logo-sf {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: var(--blue);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width: 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: white; font-family: var(--font-heading); font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 85, 165, 0.2);
   }
+  .logo-name { font-size: 17px; font-weight: 700; font-family: var(--font-heading); color: var(--text); line-height: 1.2; }
+  .logo-sub { font-size: 11px; font-weight: 500; font-family: var(--font-body); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;}
 
-  .logo-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .logo-sub {
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-  }
-
-  .nav-links a {
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: color 0.2s;
-  }
-
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a { font-size: 14px; font-weight: 600; font-family: var(--font-heading); color: var(--text-muted); transition: color 0.2s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--blue); transition: width 0.3s; }
   .nav-links a:hover { color: var(--blue); }
+  .nav-links a:hover::after { width: 100%; }
 
   .btn-whatsapp-nav {
-    background: var(--blue);
-    color: white !important;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 18px;
-    border-radius: 8px;
-    white-space: nowrap;
-    transition: background 0.2s;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white !important; border: none;
+    font-family: var(--font-heading); font-size: 14px; font-weight: 700; padding: 10px 24px; border-radius: 30px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    position: relative; overflow: hidden;
+  }
+  .btn-whatsapp-nav::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg); animation: shine 3s infinite;
+  }
+  @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+  .btn-whatsapp-nav:hover {
+    transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
   }
 
-  .btn-whatsapp-nav:hover { background: var(--blue-dark); }
-
-  /* Footer */
-  .footer {
-    background: #1a1a2e;
-    color: #e5e7eb;
-    padding: 48px 0 24px;
-    margin-top: 64px;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-    margin-bottom: 32px;
-  }
-
-  .footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    font-weight: 600;
-    font-size: 15px;
-  }
-
-  .footer-desc {
-    font-size: 13px;
-    color: #9ca3af;
-    margin-bottom: 8px;
-    line-height: 1.5;
-  }
-
-  .footer-cnpj {
-    font-size: 11px;
-    color: #6b7280;
-  }
-
-  .footer h3 {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .footer ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .footer ul a {
-    font-size: 13px;
-    color: #9ca3af;
-    transition: color 0.2s;
-  }
-
+  .footer { background: #0f172a; color: #e2e8f0; padding: 64px 0 24px; margin-top: auto; border-top: 1px solid #1e293b; }
+  .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 48px; }
+  .footer-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-weight: 700; font-size: 18px; color: white; margin-bottom: 16px; }
+  .footer-logo .logo-sf { width: 32px; height: 32px; font-size: 11px; }
+  .footer-desc { font-size: 14px; color: #94a3b8; margin-bottom: 12px; line-height: 1.6; }
+  .footer-cnpj { font-size: 12px; color: #64748b; font-family: monospace;}
+  
+  .footer h3 { font-size: 13px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer ul a { font-size: 14px; color: #94a3b8; transition: color 0.2s; }
   .footer ul a:hover { color: white; }
+  .footer p { font-size: 14px; color: #94a3b8; line-height: 1.6; }
 
-  .footer p {
-    font-size: 13px;
-    color: #9ca3af;
-    line-height: 1.6;
-  }
+  .social-links { display: flex; gap: 12px; margin-top: 16px; }
+  .social-links a { font-size: 12px; font-weight: 600; color: #94a3b8; border: 1px solid #334155; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; }
+  .social-links a:hover { color: white; border-color: white; background: rgba(255,255,255,0.05);}
 
-  .social-links {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-  }
+  .footer-bottom { border-top: 1px solid #1e293b; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #64748b; }
 
-  .social-links a {
-    font-size: 12px;
-    color: #9ca3af;
-    border: 1px solid #374151;
-    padding: 4px 10px;
-    border-radius: 20px;
-    transition: all 0.2s;
-  }
-
-  .social-links a:hover {
-    color: white;
-    border-color: white;
-  }
-
-  .footer-bottom {
-    border-top: 1px solid #374151;
-    padding-top: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: #6b7280;
-  }
-
-  .footer-bottom a {
-    color: #9ca3af;
-    transition: color 0.2s;
-  }
-
-  .footer-bottom a:hover { color: white; }
-
-  /* WhatsApp float */
   .whatsapp-float {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    background: #25D366;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 999;
-    transition: transform 0.2s;
+    position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
+    background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); z-index: 999; transition: transform 0.2s;
   }
+  .whatsapp-float:hover { transform: scale(1.08) translateY(-4px); }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+  }
+  .pulse-hover { animation: pulse 2.5s infinite; }
+  .pulse-hover:hover { animation: none; }
 
-  .whatsapp-float:hover { transform: scale(1.1); }
-
-  /* Buttons */
   .btn-primary {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.2s;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--blue-dark); color: white; font-family: var(--font-heading); font-size: 15px; font-weight: 600;
+    padding: 12px 28px; border-radius: 12px; transition: all 0.3s ease; border: 1px solid transparent;
   }
+  .btn-primary:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(10, 132, 255, 0.2); }
 
-  .btn-primary:hover { background: var(--blue-dark); }
-
-  .btn-outline {
-    display: inline-block;
-    border: 2px solid white;
-    color: white;
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .btn-outline:hover {
-    background: white;
-    color: var(--blue);
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     .footer-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-  }
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .hamburger span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--text);
-    border-radius: 2px;
-    transition: all 0.3s;
-  }
+  .hamburger { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 1001; position: relative; }
+  .hamburger span { display: block; width: 26px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: left center; }
   .desktop-only { display: inline-block; }
+  .mobile-whatsapp-btn { display: none; }
 
   @media (max-width: 768px) {
-    * { box-sizing: border-box; }
-    html, body { overflow-x: hidden; max-width: 100vw; }
     .hamburger { display: flex; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg); background: var(--text); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg); background: var(--text); }
     .desktop-only { display: none; }
     .nav-links {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      flex-direction: column;
-      padding: 16px 24px;
-      border-bottom: 1px solid #e5e7eb;
-      gap: 0;
-      z-index: 99;
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      flex-direction: column; padding: 100px 32px 32px; border: none; box-shadow: none; z-index: 900;
+      border-radius: 0; animation: fadeMenu 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; justify-content: flex-start;
     }
+    @keyframes fadeMenu { from { opacity: 0; transform: scale(0.98) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .nav-links.open { display: flex; }
-    .nav-links a {
-      padding: 12px 0;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 15px;
-    }
-    .nav-links a:last-child { border-bottom: none; }
-    .navbar .container { position: relative; }
-    .footer-grid { grid-template-columns: repeat(2, 1fr); }
-    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    .nav-links a { padding: 18px 0; font-size: 18px; text-align: center; width: 100%; border-radius: 0; border-bottom: 1px solid rgba(0, 85, 165, 0.1); transition: all 0.3s; font-weight: 500; color: var(--text-muted);}
+    .nav-links a.mobile-whatsapp-btn { display: flex; font-size: 16px; margin-top: 32px; border-bottom: none; justify-content: center; font-weight: 700; color: white !important;}
+    .nav-links a:hover { background: transparent; color: var(--blue-dark); letter-spacing: 1px; }
+    .nav-links a.mobile-whatsapp-btn:hover { letter-spacing: 0; }
+    .nav-links a::after { display: none; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   }
-
   @media (max-width: 480px) {
     .footer-grid { grid-template-columns: 1fr; }
   }
