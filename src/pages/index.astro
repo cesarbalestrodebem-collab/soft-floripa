@@ -220,29 +220,40 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
   .glass-content {
     background: rgba(0, 15, 30, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 32px;
-    padding: 64px 48px; max-width: 800px; text-align: center; color: white;
+    padding: 64px 48px 56px; max-width: 880px; text-align: center; color: white;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); pointer-events: auto;
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   .glass-content .section-tag { border-color: rgba(255,255,255,0.4); color: white; text-shadow: none; font-weight: 700; background: transparent; display: inline-block; margin-bottom: 24px;}
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  .hero-title { font-size: clamp(36px, 4vw, 56px); font-family: var(--font-heading); font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: white; text-shadow: 0 4px 15px rgba(0,0,0,0.5); text-wrap: balance;}
-  .hero-subtitle { font-size: clamp(16px, 1.8vw, 20px); font-family: var(--font-body); line-height: 1.6; margin-bottom: 40px; color: rgba(255,255,255,0.95); text-shadow: 0 2px 10px rgba(0,0,0,0.5); max-width: 600px; margin: 0 auto 40px;}
-  .hero-btn { display: inline-block; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); color: white; padding: 18px 40px; border-radius: 30px; font-weight: bold; font-family: var(--font-heading); border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s; box-shadow: 0 10px 25px rgba(10,132,255,0.4); text-decoration: none;}
+  .hero-title { font-size: clamp(40px, 5vw, 64px); font-family: var(--font-heading); font-weight: 800; line-height: 1.05; margin-bottom: 24px; color: white; text-shadow: 0 6px 20px rgba(0,0,0,0.6); text-wrap: balance; letter-spacing: -1px;}
+  .hero-subtitle { font-size: clamp(17px, 1.8vw, 22px); font-family: var(--font-body); font-weight: 500; line-height: 1.6; margin-bottom: 40px; color: rgba(255,255,255,0.95); text-shadow: 0 2px 10px rgba(0,0,0,0.5); max-width: 650px; margin: 0 auto 40px;}
+  .hero-btn { display: inline-block; background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); color: white; padding: 20px 48px; border-radius: 40px; font-size: 17px; font-weight: 800; font-family: var(--font-heading); border: 2px solid rgba(255,255,255,0.2); transition: all 0.3s; box-shadow: 0 10px 25px rgba(10,132,255,0.4); text-decoration: none;}
   .hero-btn:hover { transform: translateY(-3px) scale(1.05); background: white; color: var(--blue-dark); box-shadow: 0 15px 35px rgba(255,255,255,0.4); border-color: white;}
 
   /* Slider Original MANTIDO */
-  .hero-banners { position: relative; width: 100%; height: 700px; overflow: hidden; background: var(--bg-secondary); }
+  .hero-banners { position: relative; width: 100%; height: 850px; overflow: hidden; background: var(--bg-secondary); }
 
   
-  /* Benefícios Redesenhados */
-  .benefits { border-bottom: 1px solid var(--border); background: white; }
-  .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-  .benefit-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 32px 16px; border-right: 1px solid var(--border); }
-  .benefit-item:last-child { border-right: none; }
-  .benefit-icon { font-size: 28px; margin-bottom: 12px; }
-  .benefit-title { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--blue-dark); margin-bottom: 6px; }
-  .benefit-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  /* Benefícios Premium - Glass & Water */
+  .benefits { background: linear-gradient(180deg, var(--bg-secondary) 0%, white 100%); padding: 64px 0; position: relative; z-index: 2; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  
+  .benefit-item { 
+    display: flex; flex-direction: column; align-items: flex-start; text-align: left; padding: 32px 24px; 
+    background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px; 
+    box-shadow: 0 10px 30px rgba(0, 85, 165, 0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .benefit-item:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.85); box-shadow: 0 15px 40px rgba(0, 85, 165, 0.1); border-color: white; }
+  
+  .benefit-icon { 
+    font-size: 26px; margin-bottom: 20px; width: 56px; height: 56px; 
+    background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,85,165,0.06);
+  }
+  .benefit-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--blue-dark); margin-bottom: 8px; }
+  .benefit-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
   
   /* Seções Padronizadas */
   .section { padding: 80px 0; }
@@ -260,11 +271,11 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
   .section-header { text-align: center; margin-bottom: 48px; max-width: 700px; margin-inline: auto; }
   .section-header.light h2, .section-header.light p { color: white; }
   
-  .section-tag { display: inline-block; font-family: var(--font-heading); font-size: 12px; font-weight: 700; color: var(--blue-dark); background: var(--blue-light); padding: 6px 16px; border-radius: 30px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;}
+  .section-tag { display: inline-block; font-family: var(--font-heading); font-size: 13px; font-weight: 800; color: var(--blue-dark); background: var(--blue-light); padding: 8px 20px; border-radius: 30px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1.5px;}
   .section-tag.glow { background: rgba(255,255,255,0.1); color: #93C5FD; border: 1px solid rgba(255,255,255,0.2); }
   
-  .section-header h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
-  .section-header p { font-size: 16px; color: var(--text-muted); }
+  .section-header h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; color: var(--blue-dark); letter-spacing: -1px; text-wrap: balance;}
+  .section-header p { font-size: 17px; font-weight: 500; font-family: var(--font-body); color: var(--text-muted); }
   
   /* Glass Cards / Vitrine */
   .produtos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 40px; }
@@ -281,9 +292,9 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
   .glass-card:hover .produto-img img { transform: scale(1.05); }
 
   .produto-placeholder { font-size: 64px; }
-  .produto-info { padding: 24px; background: white; flex: 1; display: flex; flex-direction: column; border-top: 1px solid rgba(0,0,0,0.02); }
-  .produto-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-  .produto-info p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1;}
+  .produto-info { padding: 32px 24px; background: white; flex: 1; display: flex; flex-direction: column; border-top: 1px solid rgba(0,0,0,0.02); }
+  .produto-info h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: var(--blue-dark); letter-spacing: -0.5px;}
+  .produto-info p { font-size: 15px; font-weight: 500; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: 1;}
   
   .btn-primary.sm { padding: 10px 20px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; width: 100%; text-align: center;}
   .section-cta { text-align: center; margin-top: 40px; }
@@ -303,9 +314,9 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
   .blog-img-wrapper { height: 200px; width: 100%; overflow: hidden; }
   .blog-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .blog-card:hover .blog-img-wrapper img { transform: scale(1.05); }
-  .blog-info { padding: 24px; }
-  .blog-info h3 { font-size: 17px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; color: var(--text); }
-  .blog-info p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .blog-info { padding: 32px 24px; }
+  .blog-info h3 { font-size: 20px; font-weight: 800; margin-bottom: 12px; line-height: 1.3; color: var(--blue-dark); letter-spacing: -0.5px;}
+  .blog-info p { font-size: 15px; font-weight: 500; color: var(--text-muted); line-height: 1.6; }
   
   /* CTA Modernizado */
   .cta-banner-wrapper { padding: 80px 0 120px; }
@@ -316,8 +327,8 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
     border: 1px solid rgba(34, 197, 94, 0.2); backdrop-filter: blur(10px);
   }
 
-  .cta-banner h2 { font-size: 32px; font-weight: 800; margin-bottom: 16px; color: #064e3b; text-wrap: balance;}
-  .cta-banner p { font-size: 16px; color: #065f46; margin-bottom: 32px; max-width: 600px; margin-inline: auto;}
+  .cta-banner h2 { font-size: 40px; font-weight: 800; margin-bottom: 16px; color: #064e3b; text-wrap: balance; letter-spacing: -1px;}
+  .cta-banner p { font-size: 17px; font-weight: 500; color: #065f46; margin-bottom: 32px; max-width: 600px; margin-inline: auto;}
   
   .btn-primary.glow-green {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: auto; font-size: 16px; padding: 16px 36px; border-radius: 30px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
@@ -334,10 +345,9 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
     .features-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 768px) {
-    .benefits-grid { grid-template-columns: repeat(2, 1fr); }
-    .benefit-item:nth-child(2) { border-right: none; }
-    .benefit-item:nth-child(3) { border-right: 1px solid var(--border); border-top: 1px solid var(--border); }
-    .benefit-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none;}
+    .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .benefit-item { padding: 24px 20px; }
+    .benefit-icon { width: 48px; height: 48px; font-size: 22px; margin-bottom: 16px;}
     
     .section-header h2 { font-size: 28px; }
     .cta-banner h2 { font-size: 26px; }
@@ -346,6 +356,10 @@ const jsonLdProducts = produtosDestaque.map((produto: any) => ({
     .feature-card { padding: 24px 16px; }
     .cta-banner { padding: 40px 24px; border-radius: 20px; }
     
-    .glass-content { padding: 48px 24px; }
+    .hero-banners { height: 700px; }
+    .glass-content { padding: 48px 24px; max-width: 100%; }
+  }
+  @media (max-width: 480px) {
+    .benefits-grid { grid-template-columns: 1fr; }
   }
 </style>
