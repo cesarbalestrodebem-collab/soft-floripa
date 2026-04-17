@@ -246,9 +246,9 @@ if (keyword && !safeDescription.toLowerCase().includes(keyword.toLowerCase())) {
 
   .navbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: rgba(255, 255, 255, 0.80); border-bottom: 1px solid rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%);
+    background: #ffffff; border-bottom: 1px solid rgba(0, 85, 165, 0.08); /* Branco Sólido Absoluto */
     padding: 16px 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 85, 165, 0.03); /* Leve sombra constante */
   }
   .navbar::before { /* Borda reflexiva superior */
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
