@@ -3,27 +3,50 @@ const PAYLOAD_URL = import.meta.env.PAYLOAD_URL || 'https://cms-magnivio.vercel.
 // Nome do Tenant exato como será cadastrado no CMS Magnivio
 const TENANT_NAME = 'Soft Floripa'
 
+let cachedTenantId: string | null = null;
+async function getTenantId() {
+  if (cachedTenantId) return cachedTenantId;
+  try {
+    const res = await fetch(`${PAYLOAD_URL}/api/tenants?where[nome][equals]=${TENANT_NAME}&limit=1`);
+    const data = await res.json();
+    if (data.docs && data.docs.length > 0) {
+      cachedTenantId = data.docs[0].id;
+      return cachedTenantId;
+    }
+  } catch (e) {
+    console.error("Erro ao buscar o Tenant no CMS", e);
+  }
+  return null;
+}
+
 export async function getProdutos() {
-  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[tenant.nome][equals]=${TENANT_NAME}&limit=100&depth=1`)
+  const tenantId = await getTenantId();
+  if (!tenantId) return [];
+  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[tenant][equals]=${tenantId}&limit=100&depth=1`)
   const data = await res.json()
   return data.docs || []
 }
 
 export async function getProduto(slug: string) {
-  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[slug][equals]=${slug}&where[tenant.nome][equals]=${TENANT_NAME}&depth=2`)
+  const tenantId = await getTenantId();
+  if (!tenantId) return null;
+  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[slug][equals]=${slug}&where[tenant][equals]=${tenantId}&depth=2`)
   const data = await res.json()
   return data.docs?.[0] || null
 }
 
 export async function getPosts() {
-  // O endpoint agora é "blog" no CMS Magnivio, e não mais "posts"
-  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[tenant.nome][equals]=${TENANT_NAME}&limit=100&depth=1&sort=-updatedAt`)
+  const tenantId = await getTenantId();
+  if (!tenantId) return [];
+  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[tenant][equals]=${tenantId}&limit=100&depth=1&sort=-updatedAt`)
   const data = await res.json()
   return data.docs || []
 }
 
 export async function getPost(slug: string) {
-  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[slug][equals]=${slug}&where[tenant.nome][equals]=${TENANT_NAME}&depth=2`)
+  const tenantId = await getTenantId();
+  if (!tenantId) return null;
+  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[slug][equals]=${slug}&where[tenant][equals]=${tenantId}&depth=2`)
   const data = await res.json()
   return data.docs?.[0] || null
 }
