@@ -34,15 +34,15 @@ function formatDate(date: string) {
           {posts.map((post: any) => (
             <a href={`/blog/${post.slug}`} class="blog-card">
               <div class="blog-img">
-                {post.imagemCapa ? (
-                  <img src={getImageUrl(post.imagemCapa)} alt={post.titulo} width="400" height="220" loading="lazy" />
+                {post.fotoCapa ? (
+                  <img src={getImageUrl(post.fotoCapa)} alt={post.titulo} width="400" height="220" loading="lazy" />
                 ) : (
                   <div class="blog-placeholder">📝</div>
                 )}
               </div>
               <div class="blog-info">
-                {post.dataPublicacao && (
-                  <span class="blog-date">{formatDate(post.dataPublicacao)}</span>
+                {post.updatedAt && (
+                  <span class="blog-date">{formatDate(post.updatedAt)}</span>
                 )}
                 <h2>{post.titulo}</h2>
                 <p>{post.resumo}</p>

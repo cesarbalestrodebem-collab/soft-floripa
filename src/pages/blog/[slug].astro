@@ -36,7 +36,7 @@ function formatDate(date: string) {
 <Layout
   title={post.titulo}
   description={post.resumo}
-  image={post.imagemCapa ? getImageUrl(post.imagemCapa) : undefined}
+  image={post.fotoCapa ? getImageUrl(post.fotoCapa) : undefined}
 >
 
   <div class="breadcrumb">
@@ -50,18 +50,18 @@ function formatDate(date: string) {
       <div class="article-header">
         <div class="section-tag">Blog</div>
         <h1>{post.titulo}</h1>
-        {post.dataPublicacao && (
-          <time class="article-date" datetime={post.dataPublicacao}>
-            {formatDate(post.dataPublicacao)}
+        {post.updatedAt && (
+          <time class="article-date" datetime={post.updatedAt}>
+            {formatDate(post.updatedAt)}
           </time>
         )}
         <p class="article-resumo">{post.resumo}</p>
       </div>
 
-      {post.imagemCapa && (
+      {post.fotoCapa && (
         <div class="article-capa">
           <img
-            src={getImageUrl(post.imagemCapa)}
+            src={getImageUrl(post.fotoCapa)}
             alt={post.titulo}
             width="900"
             height="400"
@@ -73,7 +73,7 @@ function formatDate(date: string) {
       )}
 
       <div class="article-content">
-        <div set:html={post.conteudo} />
+        <div set:html={post.conteudoHTMLBruto} />
       </div>
 
       <div class="article-cta">
@@ -91,7 +91,7 @@ function formatDate(date: string) {
     "@type": "Article",
     "headline": post.titulo,
     "description": post.resumo,
-    "datePublished": post.dataPublicacao,
+    "datePublished": post.updatedAt,
     "publisher": {
       "@type": "Organization",
       "name": "Soft Floripa",
