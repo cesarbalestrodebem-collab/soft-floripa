@@ -1,25 +1,29 @@
-const PAYLOAD_URL = import.meta.env.PAYLOAD_URL || 'https://soft-floripa-cms.vercel.app'
+const PAYLOAD_URL = import.meta.env.PAYLOAD_URL || 'https://cms-magnivio.vercel.app'
+
+// Nome do Tenant exato como será cadastrado no CMS Magnivio
+const TENANT_NAME = 'Soft Floripa'
 
 export async function getProdutos() {
-  const res = await fetch(`${PAYLOAD_URL}/api/produtos?limit=100&depth=1`)
+  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[tenant.nome][equals]=${TENANT_NAME}&limit=100&depth=1`)
   const data = await res.json()
   return data.docs || []
 }
 
 export async function getProduto(slug: string) {
-  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[slug][equals]=${slug}&depth=2`)
+  const res = await fetch(`${PAYLOAD_URL}/api/produtos?where[slug][equals]=${slug}&where[tenant.nome][equals]=${TENANT_NAME}&depth=2`)
   const data = await res.json()
   return data.docs?.[0] || null
 }
 
 export async function getPosts() {
-  const res = await fetch(`${PAYLOAD_URL}/api/posts?limit=100&depth=1&sort=-dataPublicacao`)
+  // O endpoint agora é "blog" no CMS Magnivio, e não mais "posts"
+  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[tenant.nome][equals]=${TENANT_NAME}&limit=100&depth=1&sort=-updatedAt`)
   const data = await res.json()
   return data.docs || []
 }
 
 export async function getPost(slug: string) {
-  const res = await fetch(`${PAYLOAD_URL}/api/posts?where[slug][equals]=${slug}&depth=2`)
+  const res = await fetch(`${PAYLOAD_URL}/api/blog?where[slug][equals]=${slug}&where[tenant.nome][equals]=${TENANT_NAME}&depth=2`)
   const data = await res.json()
   return data.docs?.[0] || null
 }
